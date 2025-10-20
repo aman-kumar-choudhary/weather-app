@@ -1,0 +1,35 @@
+{% extends "base.html" %} {% block title %}About - Polar Weather Forecast{%
+endblock %} {% block content %}
+<div class="max-w-4xl mx-auto">
+  <h1 class="text-4xl font-bold mb-8 text-center">
+    About Polar Weather Forecast
+  </h1>
+
+  <div
+    class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-8 shadow-xl mb-8"
+  >
+    <h2 class="text-2xl font-bold mb-4">Our Mission</h2>
+    <p class="mb-6 text-lg">
+      Polar Weather Forecast provides accurate and up-to-date weather
+      information for locations around the world. Our goal is to help you plan
+      your days with reliable weather forecasts.
+    </p>
+
+    <h2 class="text-2xl font-bold mb-4">Features</h2>
+    <ul class="list-disc list-inside mb-6 space-y-2">
+      <li>Current weather conditions</li>
+      <li>5-day weather forecast</li>
+      <li>Temperature, humidity, wind speed, and more</li>
+      <li>Global city coverage</li>
+      <li>Beautiful, intuitive interface</li>
+    </ul>
+
+    <h2 class="text-2xl font-bold mb-4">Technology</h2>
+    <p class="mb-4">
+      Our website is built using modern web technologies including Flask,
+      Tailwind CSS, and the OpenWeatherMap API to deliver accurate weather data
+      in an aesthetically pleasing format.
+    </p>
+  </div>
+</div>
+{% endblock %}

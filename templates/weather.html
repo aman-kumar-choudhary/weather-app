@@ -1,0 +1,39 @@
+{% extends "base.html" %} {% block title %}About - Weather App{% endblock %} {%
+block content %}
+<div class="container">
+  <div class="about-section">
+    <h1>About WeatherPro</h1>
+
+    <div class="about-content">
+      <div class="about-text">
+        <p>
+          WeatherPro is a modern, efficient weather application that provides
+          accurate weather forecasts for locations worldwide.
+        </p>
+
+        <h2>Features</h2>
+        <ul class="features-list">
+          <li>Real-time weather data</li>
+          <li>Hourly and daily forecasts</li>
+          <li>Beautiful, intuitive interface</li>
+          <li>Fast and lightweight</li>
+          <li>Responsive design</li>
+        </ul>
+
+        <h2>Technology</h2>
+        <p>
+          Built with Flask, OpenWeatherMap API, and modern web technologies.
+        </p>
+      </div>
+
+      <div class="about-image">
+        <img
+          src="{{ url_for('static', filename='images/weather-icons/sunny.png') }}"
+          alt="Weather App"
+          class="about-img"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

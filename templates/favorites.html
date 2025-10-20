@@ -1,0 +1,51 @@
+{% extends "base.html" %} {% block content %}
+<div class="min-h-screen bg-gradient-to-br from-blue-400 to-purple-500 py-8">
+  <div class="max-w-4xl mx-auto px-4">
+    <div class="flex items-center justify-between mb-8">
+      <h1 class="text-white text-3xl font-bold">Favorite Cities</h1>
+      <a href="/" class="text-white hover:text-white/80">
+        <i class="fas fa-arrow-left mr-2"></i>Back to Weather
+      </a>
+    </div>
+
+    {% if cities %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {% for city in cities %}
+      <div
+        class="bg-white/20 backdrop-blur-lg rounded-3xl p-6 border border-white/30 shadow-xl"
+      >
+        <div class="flex justify-between items-start mb-4">
+          <h3 class="text-white text-xl font-semibold">{{ city.city }}</h3>
+          <a
+            href="/?city={{ city.city }}"
+            class="text-white/70 hover:text-white"
+          >
+            <i class="fas fa-external-link-alt"></i>
+          </a>
+        </div>
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-white text-3xl font-light">
+              {{ city.current_temp|round|int }}°
+            </p>
+            <p class="text-white/70 capitalize">{{ city.description }}</p>
+          </div>
+          <img
+            src="http://openweathermap.org/img/wn/{{ city.icon }}@2x.png"
+            alt="Weather icon"
+            class="w-16 h-16"
+          />
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center text-white py-12">
+      <i class="far fa-star text-6xl mb-4 opacity-50"></i>
+      <h2 class="text-2xl font-semibold mb-2">No Favorite Cities</h2>
+      <p class="text-white/70">Add cities to your favorites for quick access</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
