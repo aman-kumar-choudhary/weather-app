@@ -277,7 +277,7 @@
             <div class="w-12 bg-white/30 rounded-full h-1.5">
               <div
                 class="bg-gradient-to-r from-blue-400 to-yellow-400 h-1.5 rounded-full temp-bar"
-                style="width: {{ ((day.high - day.low) / 40 * 100) }}%"
+                style="width: {{ ((day.high - day.low) / 40 * 100) | round(2) }}%;"
               ></div>
             </div>
             <span class="text-white font-semibold text-sm"
@@ -436,9 +436,11 @@
 
   // Temperature Chart
   {% if weather %}
-  const temperatureChart = document.getElementById('temperatureChart');
-  if (temperatureChart) {
-    const hourlyData = {{ weather.hourly | tojson }};
+    const temperatureChart = document.getElementById('temperatureChart');
+    if (temperatureChart) {
+      const hourlyData = {{ weather.hourly | tojson | safe }};
+      console.log(hourlyData);
+
 
     new Chart(temperatureChart, {
       type: 'line',
