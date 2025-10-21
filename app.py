@@ -173,7 +173,7 @@ def process_weather_data(raw_data):
 @app.route('/')
 def index():
     # Default city or get from request
-    city = request.args.get('city', 'London')
+    city = request.args.get('city', 'Patna')
     weather_data = get_weather_data(city)
     
     if weather_data:
@@ -188,7 +188,7 @@ def index():
 
 @app.route('/search', methods=['POST'])
 def search():
-    city = request.form.get('city', 'London')
+    city = request.form.get('city', 'Patna')
     return jsonify({'redirect': f'/?city={city}'})
 
 @app.route('/favorite', methods=['POST'])
@@ -232,7 +232,7 @@ def geolocation():
     
     # For now, return a mock response
     # In production, you'd use a geocoding API like OpenCage, Google Maps, etc.
-    return jsonify({'city': 'London'})  # Placeholder
+    return jsonify({'city': 'Patna'})  # Placeholder
 
 @app.route('/api/weather/<city>')
 def api_weather(city):
