@@ -10,7 +10,7 @@ app.secret_key = 'your-secret-key-here'
 
 API_KEY = "fe7baef8dcd28e3dd516811461fdf32a"
 
-# Add custom Jinja2 filters
+# Add custom Jinja2 filters and functions
 @app.template_filter('datetime')
 def format_datetime(value, format='%H:%M'):
     if isinstance(value, (int, float)):
@@ -28,6 +28,13 @@ def round_filter(value, precision=0):
         return round(float(value), precision)
     except (ValueError, TypeError):
         return value
+
+# Add now function to template context
+@app.context_processor
+def utility_processor():
+    def now(format='%b %d, %Y'):
+        return datetime.now().strftime(format)
+    return dict(now=now)
 
 # Favorite cities storage
 FAVORITE_CITIES_FILE = 'favorite_cities.json'
@@ -48,10 +55,19 @@ def save_favorite_cities(cities):
     except:
         pass
 
-def get_weather_data(city):
+def get_weather_data(city=None, lat=None, lon=None):
     try:
-        # Current weather
-        current_url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric"
+        if city:
+            # Current weather by city name
+            current_url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric"
+            forecast_url = f"http://api.openweathermap.org/data/2.5/forecast?q={city}&appid={API_KEY}&units=metric"
+        elif lat and lon:
+            # Current weather by coordinates
+            current_url = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API_KEY}&units=metric"
+            forecast_url = f"http://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={API_KEY}&units=metric"
+        else:
+            return None
+        
         current_response = requests.get(current_url)
         
         if current_response.status_code != 200:
@@ -60,7 +76,6 @@ def get_weather_data(city):
         current_data = current_response.json()
         
         # Forecast
-        forecast_url = f"http://api.openweathermap.org/data/2.5/forecast?q={city}&appid={API_KEY}&units=metric"
         forecast_response = requests.get(forecast_url)
         forecast_data = forecast_response.json()
         
@@ -174,7 +189,13 @@ def process_weather_data(raw_data):
 def index():
     # Default city or get from request
     city = request.args.get('city', 'Patna')
-    weather_data = get_weather_data(city)
+    lat = request.args.get('lat')
+    lon = request.args.get('lon')
+    
+    if lat and lon:
+        weather_data = get_weather_data(lat=lat, lon=lon)
+    else:
+        weather_data = get_weather_data(city)
     
     if weather_data:
         processed_data = process_weather_data(weather_data)
@@ -224,15 +245,30 @@ def favorites():
     
     return render_template('favorites.html', cities=cities_weather)
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
 @app.route('/api/geolocation')
 def geolocation():
-    """Simple geolocation endpoint - in production, use a proper geocoding service"""
+    """Get city name from coordinates using OpenWeatherMap API"""
     lat = request.args.get('lat')
     lon = request.args.get('lon')
     
-    # For now, return a mock response
-    # In production, you'd use a geocoding API like OpenCage, Google Maps, etc.
-    return jsonify({'city': 'Patna'})  # Placeholder
+    try:
+        # Use OpenWeatherMap reverse geocoding
+        geo_url = f"http://api.openweathermap.org/geo/1.0/reverse?lat={lat}&lon={lon}&limit=1&appid={API_KEY}"
+        response = requests.get(geo_url)
+        
+        if response.status_code == 200:
+            data = response.json()
+            if data and len(data) > 0:
+                return jsonify({'city': data[0]['name']})
+        
+        return jsonify({'city': 'Unknown Location'})
+    except Exception as e:
+        print(f"Geolocation error: {e}")
+        return jsonify({'city': 'Unknown Location'})
 
 @app.route('/api/weather/<city>')
 def api_weather(city):
@@ -244,4 +280,4 @@ def api_weather(city):
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=False)
+    app.run(host='0.0.0.0', port=port, debug=True)

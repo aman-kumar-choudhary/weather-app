@@ -1,34 +1,51 @@
 {% extends "base.html" %} {% block content %}
-<div class="min-h-screen bg-gradient-to-br from-blue-400 to-purple-500">
+<div
+  class="min-h-screen bg-gradient-to-br from-blue-400 via-purple-500 to-indigo-600"
+>
   <!-- Header -->
-  <div class="bg-white/20 backdrop-blur-lg border-b border-white/30">
-    <div class="max-w-md mx-auto px-4 py-4">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center space-x-3">
-          <i class="fas fa-cloud-sun text-white text-2xl"></i>
-          <h1 class="text-white text-xl font-semibold">Weather</h1>
+  <div class="bg-white/20 backdrop-blur-lg border-b border-white/30 shadow-lg">
+    <div class="max-w-6xl mx-auto px-4 py-4">
+      <div
+        class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0"
+      >
+        <div class="flex items-center space-x-4">
+          <i class="fas fa-cloud-sun text-white text-3xl"></i>
+          <h1 class="text-white text-2xl font-bold">Polar Weather</h1>
         </div>
-        <div class="relative">
-          <form id="searchForm" class="flex items-center">
-            <input
-              type="text"
-              name="city"
-              placeholder="Search city..."
-              class="bg-white/20 backdrop-blur-lg border border-white/30 rounded-full px-4 py-2 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50 w-40"
-              value="{{ city }}"
-            />
-            <button type="submit" class="ml-2 text-white">
-              <i class="fas fa-search"></i>
-            </button>
-            <button
-              type="button"
-              id="geoLocationBtn"
-              class="ml-2 text-white hover:text-white/80"
-              title="Use current location"
-            >
-              <i class="fas fa-location-arrow"></i>
-            </button>
-          </form>
+        <div class="flex items-center space-x-4">
+          <div class="relative">
+            <form id="searchForm" class="flex items-center">
+              <div class="relative">
+                <input
+                  type="text"
+                  name="city"
+                  placeholder="Search city..."
+                  class="bg-white/20 backdrop-blur-lg border border-white/30 rounded-full px-6 py-3 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50 w-64 text-lg shadow-lg"
+                  value="{{ city }}"
+                />
+                <button
+                  type="submit"
+                  class="absolute right-3 top-1/2 transform -translate-y-1/2 text-white hover:text-white/80"
+                >
+                  <i class="fas fa-search text-xl"></i>
+                </button>
+              </div>
+              <button
+                type="button"
+                id="geoLocationBtn"
+                class="ml-3 bg-white/20 backdrop-blur-lg border border-white/30 rounded-full p-3 text-white hover:bg-white/30 transition-all duration-300 shadow-lg"
+                title="Use current location"
+              >
+                <i class="fas fa-location-arrow text-xl"></i>
+              </button>
+            </form>
+          </div>
+          <a
+            href="/about"
+            class="text-white hover:text-white/80 transition-colors"
+          >
+            <i class="fas fa-info-circle text-2xl"></i>
+          </a>
         </div>
       </div>
     </div>
@@ -36,48 +53,53 @@
 
   <!-- Favorite Cities Quick Access -->
   {% if favorite_cities %}
-  <div class="max-w-md mx-auto px-4 py-2">
-    <div class="flex space-x-2 overflow-x-auto pb-2">
+  <div class="max-w-6xl mx-auto px-4 py-4">
+    <div class="flex space-x-3 overflow-x-auto pb-3">
       {% for fav_city in favorite_cities %}
       <a
         href="/?city={{ fav_city }}"
-        class="bg-white/20 backdrop-blur-lg rounded-full px-4 py-2 text-white text-sm whitespace-nowrap hover:bg-white/30 transition-colors"
+        class="bg-white/20 backdrop-blur-lg rounded-full px-5 py-3 text-white text-base font-medium whitespace-nowrap hover:bg-white/30 transition-all duration-300 shadow-lg border border-white/20 flex items-center space-x-2"
       >
-        {{ fav_city }}
+        <i class="fas fa-star text-yellow-300"></i>
+        <span>{{ fav_city }}</span>
       </a>
       {% endfor %}
       <a
         href="/favorites"
-        class="bg-white/20 backdrop-blur-lg rounded-full px-4 py-2 text-white text-sm whitespace-nowrap hover:bg-white/30 transition-colors"
+        class="bg-white/20 backdrop-blur-lg rounded-full px-5 py-3 text-white text-base font-medium whitespace-nowrap hover:bg-white/30 transition-all duration-300 shadow-lg border border-white/20 flex items-center space-x-2"
       >
-        <i class="fas fa-star mr-1"></i> All
+        <i class="fas fa-heart text-red-300"></i>
+        <span>All Favorites</span>
       </a>
     </div>
   </div>
   {% endif %}
 
   <!-- Main Content -->
-  <div class="max-w-md mx-auto px-4 py-6">
+  <div class="max-w-6xl mx-auto px-4 py-8">
     {% if error %}
-    <div class="bg-red-500 text-white p-4 rounded-lg mb-6 text-center">
-      {{ error }}
+    <div
+      class="bg-red-500/80 backdrop-blur-lg text-white p-6 rounded-2xl mb-8 text-center shadow-xl border border-red-300/30"
+    >
+      <i class="fas fa-exclamation-triangle text-2xl mb-3"></i>
+      <p class="text-xl">{{ error }}</p>
     </div>
     {% endif %} {% if weather %}
 
     <!-- Weather Alerts -->
     {% if weather.alerts and weather.alerts|length > 0 %}
     <div
-      class="bg-red-500/20 backdrop-blur-lg rounded-3xl p-6 mb-6 border border-red-300/30 shadow-xl"
+      class="bg-red-500/30 backdrop-blur-lg rounded-2xl p-8 mb-8 border border-red-300/50 shadow-2xl transform hover:scale-[1.02] transition-transform duration-300"
     >
-      <div class="flex items-center space-x-2 mb-3">
-        <i class="fas fa-exclamation-triangle text-red-300"></i>
-        <h3 class="text-red-300 font-semibold">Weather Alert</h3>
+      <div class="flex items-center space-x-4 mb-4">
+        <i class="fas fa-exclamation-triangle text-red-300 text-3xl"></i>
+        <h3 class="text-red-300 font-bold text-2xl">Weather Alert</h3>
       </div>
       {% for alert in weather.alerts %}
       <div class="text-red-200">
-        <p class="font-semibold">{{ alert.event }}</p>
-        <p class="text-sm mt-1">{{ alert.description }}</p>
-        <p class="text-xs mt-2 opacity-80">
+        <p class="font-bold text-xl mb-2">{{ alert.event }}</p>
+        <p class="text-lg mb-3">{{ alert.description }}</p>
+        <p class="text-base opacity-90">
           From {{ alert.start }} to {{ alert.end }}
         </p>
       </div>
@@ -87,233 +109,349 @@
 
     <!-- Current Weather Card -->
     <div
-      class="bg-white/20 backdrop-blur-lg rounded-3xl p-6 mb-6 border border-white/30 shadow-xl current-weather"
+      class="bg-white/20 backdrop-blur-lg rounded-3xl p-8 mb-8 border border-white/30 shadow-2xl transform hover:scale-[1.01] transition-all duration-500 current-weather"
     >
-      <div class="text-center mb-6">
-        <h2 class="text-white text-2xl font-bold mb-2">
-          {{ weather.current.city }}
-        </h2>
-        <p class="text-white/80 text-lg capitalize">
-          {{ weather.current.description }}
-        </p>
+      <div class="flex justify-between items-start mb-6">
+        <div class="text-center md:text-left">
+          <h2 class="text-white text-4xl font-bold mb-2">
+            {{ weather.current.city }}
+          </h2>
+          <p class="text-white/80 text-xl capitalize mb-4">
+            {{ weather.current.description }}
+          </p>
+          <div class="flex items-center space-x-4 text-white/70">
+            <span class="flex items-center space-x-2">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>{{ weather.current.country }}</span>
+            </span>
+            <span class="flex items-center space-x-2">
+              <i class="fas fa-calendar"></i>
+              <span>{{ now() }}</span>
+            </span>
+          </div>
+        </div>
+        <button
+          id="favoriteBtn"
+          class="bg-white/20 backdrop-blur-lg border border-white/30 rounded-full px-6 py-3 text-white hover:bg-white/30 transition-all duration-300 shadow-lg transform hover:scale-110"
+        >
+          <i class="far fa-star text-xl mr-2"></i>Add to Favorites
+        </button>
       </div>
 
-      <div class="flex items-center justify-between mb-6">
-        <div>
-          <div class="text-white text-5xl font-light">
+      <div class="flex flex-col md:flex-row items-center justify-between mb-8">
+        <div class="text-center md:text-left mb-6 md:mb-0">
+          <div class="text-white text-7xl font-light mb-2">
             {{ weather.current.temp|round|int }}°
           </div>
-          <p class="text-white/70">
+          <p class="text-white/70 text-xl mb-4">
+            Feels like {{ weather.current.feels_like|round|int }}°
+          </p>
+          <p class="text-white/70 text-lg">
             H:{{ weather.current.temp_max|round|int }}° L:{{
             weather.current.temp_min|round|int }}°
           </p>
         </div>
-        <div class="text-right">
+        <div class="text-center">
           <img
             src="http://openweathermap.org/img/wn/{{ weather.current.icon }}@4x.png"
             alt="Weather icon"
-            class="w-24 h-24 -my-4 weather-icon"
+            class="w-40 h-40 weather-icon transform hover:scale-110 transition-transform duration-300"
           />
         </div>
       </div>
 
-      <!-- Additional Info -->
+      <!-- Additional Info Grid -->
       <div
-        class="grid grid-cols-3 gap-4 text-center border-t border-white/20 pt-4"
+        class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center border-t border-white/20 pt-8"
       >
-        <div>
-          <p class="text-white/70 text-sm">FEELS LIKE</p>
-          <p class="text-white font-semibold">
+        <div
+          class="bg-white/10 rounded-2xl p-4 backdrop-blur-lg border border-white/20"
+        >
+          <i class="fas fa-temperature-low text-blue-300 text-2xl mb-2"></i>
+          <p class="text-white/70 text-sm mb-1">FEELS LIKE</p>
+          <p class="text-white font-bold text-xl">
             {{ weather.current.feels_like|round|int }}°
           </p>
         </div>
-        <div>
-          <p class="text-white/70 text-sm">HUMIDITY</p>
-          <p class="text-white font-semibold">
+        <div
+          class="bg-white/10 rounded-2xl p-4 backdrop-blur-lg border border-white/20"
+        >
+          <i class="fas fa-tint text-blue-300 text-2xl mb-2"></i>
+          <p class="text-white/70 text-sm mb-1">HUMIDITY</p>
+          <p class="text-white font-bold text-xl">
             {{ weather.current.humidity }}%
           </p>
         </div>
-        <div>
-          <p class="text-white/70 text-sm">WIND</p>
-          <p class="text-white font-semibold">
+        <div
+          class="bg-white/10 rounded-2xl p-4 backdrop-blur-lg border border-white/20"
+        >
+          <i class="fas fa-wind text-blue-300 text-2xl mb-2"></i>
+          <p class="text-white/70 text-sm mb-1">WIND</p>
+          <p class="text-white font-bold text-xl">
             {{ weather.current.wind_speed }} m/s
+          </p>
+        </div>
+        <div
+          class="bg-white/10 rounded-2xl p-4 backdrop-blur-lg border border-white/20"
+        >
+          <i class="fas fa-gauge-high text-blue-300 text-2xl mb-2"></i>
+          <p class="text-white/70 text-sm mb-1">PRESSURE</p>
+          <p class="text-white font-bold text-xl">
+            {{ weather.current.pressure }} hPa
           </p>
         </div>
       </div>
     </div>
 
-    <!-- Additional Weather Metrics -->
-    <div
-      class="bg-white/20 backdrop-blur-lg rounded-3xl p-6 mb-6 border border-white/30 shadow-xl"
-    >
-      <h3 class="text-white font-semibold mb-4">WEATHER DETAILS</h3>
-      <div class="grid grid-cols-2 gap-4">
-        <div class="text-center">
-          <p class="text-white/70 text-sm">SUNRISE & SUNSET</p>
-          <div class="flex justify-center space-x-4 mt-2">
-            <div class="text-center">
-              <i class="fas fa-sun text-yellow-300 mb-1"></i>
-              <p class="text-white font-semibold">
+    <!-- Second Row: Charts and Additional Metrics -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+      <!-- Temperature Chart -->
+      <div
+        class="bg-white/20 backdrop-blur-lg rounded-3xl p-8 border border-white/30 shadow-2xl transform hover:scale-[1.01] transition-all duration-500"
+      >
+        <h3 class="text-white font-bold text-2xl mb-6 flex items-center">
+          <i class="fas fa-chart-line mr-3 text-blue-300"></i>
+          TEMPERATURE TREND
+        </h3>
+        <div class="chart-container">
+          <canvas id="temperatureChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Additional Weather Metrics -->
+      <div
+        class="bg-white/20 backdrop-blur-lg rounded-3xl p-8 border border-white/30 shadow-2xl transform hover:scale-[1.01] transition-all duration-500"
+      >
+        <h3 class="text-white font-bold text-2xl mb-6 flex items-center">
+          <i class="fas fa-sun mr-3 text-yellow-300"></i>
+          WEATHER DETAILS
+        </h3>
+        <div class="grid grid-cols-2 gap-6">
+          <div
+            class="bg-white/10 rounded-2xl p-6 text-center backdrop-blur-lg border border-white/20"
+          >
+            <div class="flex flex-col items-center space-y-3">
+              <i class="fas fa-sunrise text-yellow-300 text-3xl"></i>
+              <p class="text-white/70 text-sm">SUNRISE</p>
+              <p class="text-white font-bold text-2xl">
                 {{ weather.current.sunrise }}
               </p>
             </div>
-            <div class="text-center">
-              <i class="fas fa-moon text-blue-300 mb-1"></i>
-              <p class="text-white font-semibold">
+          </div>
+          <div
+            class="bg-white/10 rounded-2xl p-6 text-center backdrop-blur-lg border border-white/20"
+          >
+            <div class="flex flex-col items-center space-y-3">
+              <i class="fas fa-sunset text-orange-300 text-3xl"></i>
+              <p class="text-white/70 text-sm">SUNSET</p>
+              <p class="text-white font-bold text-2xl">
                 {{ weather.current.sunset }}
               </p>
             </div>
           </div>
+          <div
+            class="bg-white/10 rounded-2xl p-6 text-center backdrop-blur-lg border border-white/20"
+          >
+            <div class="flex flex-col items-center space-y-3">
+              <i class="fas fa-eye text-blue-300 text-3xl"></i>
+              <p class="text-white/70 text-sm">VISIBILITY</p>
+              <p class="text-white font-bold text-2xl">
+                {{ (weather.current.visibility / 1000)|round(1) }} km
+              </p>
+            </div>
+          </div>
+          <div
+            class="bg-white/10 rounded-2xl p-6 text-center backdrop-blur-lg border border-white/20"
+          >
+            <div class="flex flex-col items-center space-y-3">
+              <i class="fas fa-sun text-yellow-300 text-3xl"></i>
+              <p class="text-white/70 text-sm">UV INDEX</p>
+              <p class="text-white font-bold text-2xl">
+                {{ weather.current.uv_index }}
+              </p>
+            </div>
+          </div>
         </div>
-
-        <div class="text-center">
-          <p class="text-white/70 text-sm">PRESSURE</p>
-          <p class="text-white font-semibold text-lg">
-            {{ weather.current.pressure }} hPa
-          </p>
-        </div>
-
-        <div class="text-center">
-          <p class="text-white/70 text-sm">VISIBILITY</p>
-          <p class="text-white font-semibold text-lg">
-            {{ (weather.current.visibility / 1000)|round(1) }} km
-          </p>
-        </div>
-
-        <div class="text-center">
-          <p class="text-white/70 text-sm">UV INDEX</p>
-          <p class="text-white font-semibold text-lg">
-            {{ weather.current.uv_index }}
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Temperature Chart -->
-    <div
-      class="bg-white/20 backdrop-blur-lg rounded-3xl p-6 mb-6 border border-white/30 shadow-xl"
-    >
-      <h3 class="text-white font-semibold mb-4">TEMPERATURE TREND</h3>
-      <div class="chart-container">
-        <canvas id="temperatureChart"></canvas>
       </div>
     </div>
 
     <!-- Hourly Forecast -->
     <div
-      class="bg-white/20 backdrop-blur-lg rounded-3xl p-6 mb-6 border border-white/30 shadow-xl"
+      class="bg-white/20 backdrop-blur-lg rounded-3xl p-8 mb-8 border border-white/30 shadow-2xl transform hover:scale-[1.01] transition-all duration-500"
     >
-      <h3 class="text-white font-semibold mb-4">HOURLY FORECAST</h3>
-      <div class="flex overflow-x-auto pb-4 space-x-6 hourly-forecast">
+      <h3 class="text-white font-bold text-2xl mb-6 flex items-center">
+        <i class="fas fa-clock mr-3 text-purple-300"></i>
+        24-HOUR FORECAST
+      </h3>
+      <div class="flex overflow-x-auto pb-6 space-x-8 hourly-forecast px-4">
         {% for hour in weather.hourly %}
-        <div class="text-center flex-shrink-0">
-          <p class="text-white/70 text-sm mb-2">{{ hour.time }}</p>
+        <div
+          class="text-center flex-shrink-0 bg-white/10 rounded-2xl p-6 backdrop-blur-lg border border-white/20 min-w-[120px] transform hover:scale-110 transition-transform duration-300"
+        >
+          <p class="text-white/80 text-lg font-semibold mb-3">
+            {{ hour.time }}
+          </p>
           <img
-            src="http://openweathermap.org/img/wn/{{ hour.icon }}.png"
+            src="http://openweathermap.org/img/wn/{{ hour.icon }}@2x.png"
             alt="Weather icon"
-            class="w-8 h-8 mx-auto mb-1 weather-icon"
+            class="w-16 h-16 mx-auto mb-3 weather-icon"
           />
-          <p class="text-white font-semibold text-lg">
+          <p class="text-white font-bold text-2xl mb-2">
             {{ hour.temp|round|int }}°
           </p>
-          <div class="flex items-center justify-center space-x-1 mt-1">
-            <i class="fas fa-tint text-blue-300 text-xs"></i>
-            <p class="text-white/70 text-xs">{{ hour.humidity }}%</p>
+          <div class="space-y-2">
+            <div class="flex items-center justify-center space-x-2">
+              <i class="fas fa-tint text-blue-300 text-sm"></i>
+              <p class="text-white/70 text-sm">{{ hour.humidity }}%</p>
+            </div>
+            {% if hour.precipitation > 0 %}
+            <div class="flex items-center justify-center space-x-2">
+              <i class="fas fa-umbrella text-blue-400 text-sm"></i>
+              <p class="text-white/70 text-sm">
+                {{ hour.precipitation|round|int }}%
+              </p>
+            </div>
+            {% endif %}
+            <div class="flex items-center justify-center space-x-2">
+              <i class="fas fa-wind text-gray-300 text-sm"></i>
+              <p class="text-white/70 text-sm">{{ hour.wind_speed }} m/s</p>
+            </div>
           </div>
-          {% if hour.precipitation > 0 %}
-          <div class="flex items-center justify-center space-x-1 mt-1">
-            <i class="fas fa-umbrella text-blue-400 text-xs"></i>
-            <p class="text-white/70 text-xs">
-              {{ hour.precipitation|round|int }}%
-            </p>
-          </div>
-          {% endif %}
         </div>
         {% endfor %}
       </div>
     </div>
 
-    <!-- Tomorrow's Outlook -->
-    <div
-      class="bg-white/20 backdrop-blur-lg rounded-3xl p-6 mb-6 border border-white/30 shadow-xl"
-    >
-      <h3 class="text-white font-semibold mb-2">Tomorrow's Outlook</h3>
-      <p class="text-white/80">{{ weather.tomorrow_outlook }}</p>
-    </div>
-
-    <!-- 7-Day Forecast -->
-    <div
-      class="bg-white/20 backdrop-blur-lg rounded-3xl p-6 mb-6 border border-white/30 shadow-xl"
-    >
-      <h3 class="text-white font-semibold mb-4">7-DAY FORECAST</h3>
-      <div class="space-y-4">
-        {% for day in weather.daily %}
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-4 w-28">
-            <span
-              class="text-white font-medium {% if loop.index0 == 0 %}font-semibold{% endif %}"
-              >{{ day.day }}</span
-            >
-            <span class="text-white/50 text-xs">{{ day.date }}</span>
-            {% if loop.index0 == 0 %}
-            <span
-              class="text-white/70 text-xs bg-white/20 px-2 py-1 rounded-full"
-              >Today</span
-            >
-            {% endif %}
-          </div>
-
-          <div class="flex items-center space-x-2 flex-1 justify-center">
-            <img
-              src="http://openweathermap.org/img/wn/{{ day.icon }}.png"
-              alt="Weather icon"
-              class="w-8 h-8 weather-icon"
-            />
-            <span class="text-white/70 text-sm">{{ day.precipitation }}%</span>
-          </div>
-
-          <div class="flex items-center space-x-3 w-20 justify-end">
-            <span class="text-white/70 text-sm">{{ day.low|round|int }}°</span>
-            <div class="w-12 bg-white/30 rounded-full h-1.5">
-              <div
-                class="bg-gradient-to-r from-blue-400 to-yellow-400 h-1.5 rounded-full temp-bar"
-                style="width: {{ ((day.high - day.low) / 40 * 100) | round(2) }}%;"
-              ></div>
+    <!-- Third Row: Tomorrow's Outlook and 5-Day Forecast -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+      <!-- Tomorrow's Outlook -->
+      <div
+        class="bg-white/20 backdrop-blur-lg rounded-3xl p-8 border border-white/30 shadow-2xl transform hover:scale-[1.01] transition-all duration-500 lg:col-span-1"
+      >
+        <h3 class="text-white font-bold text-2xl mb-4 flex items-center">
+          <i class="fas fa-calendar-day mr-3 text-green-300"></i>
+          Tomorrow
+        </h3>
+        <div class="text-center">
+          <img
+            src="http://openweathermap.org/img/wn/{{ weather.daily[1].icon }}@2x.png"
+            alt="Tomorrow weather"
+            class="w-24 h-24 mx-auto mb-4"
+          />
+          <p class="text-white/80 text-xl mb-2">
+            {{ weather.tomorrow_outlook }}
+          </p>
+          <div class="grid grid-cols-2 gap-4 mt-6">
+            <div class="bg-white/10 rounded-xl p-4">
+              <p class="text-white/70 text-sm">High</p>
+              <p class="text-white font-bold text-xl">
+                {{ weather.daily[1].high|round|int }}°
+              </p>
             </div>
-            <span class="text-white font-semibold text-sm"
-              >{{ day.high|round|int }}°</span
-            >
+            <div class="bg-white/10 rounded-xl p-4">
+              <p class="text-white/70 text-sm">Low</p>
+              <p class="text-white font-bold text-xl">
+                {{ weather.daily[1].low|round|int }}°
+              </p>
+            </div>
           </div>
         </div>
-
-        {% if not loop.last %}
-        <div class="border-b border-white/20"></div>
-        {% endif %} {% endfor %}
       </div>
-    </div>
 
-    <!-- Favorite Button -->
-    <div class="text-center mb-6">
-      <button
-        id="favoriteBtn"
-        class="bg-white/20 backdrop-blur-lg border border-white/30 rounded-full px-6 py-3 text-white hover:bg-white/30 transition-colors duration-300"
+      <!-- 5-Day Forecast -->
+      <div
+        class="bg-white/20 backdrop-blur-lg rounded-3xl p-8 border border-white/30 shadow-2xl transform hover:scale-[1.01] transition-all duration-500 lg:col-span-2"
       >
-        <i class="far fa-star mr-2"></i>Add to Favorites
-      </button>
+        <h3 class="text-white font-bold text-2xl mb-6 flex items-center">
+          <i class="fas fa-calendar-week mr-3 text-indigo-300"></i>
+          5-DAY FORECAST
+        </h3>
+        <div class="space-y-4">
+          {% for day in weather.daily %}
+          <div
+            class="flex items-center justify-between bg-white/10 rounded-2xl p-6 backdrop-blur-lg border border-white/20 transform hover:scale-[1.02] transition-transform duration-300"
+          >
+            <div class="flex items-center space-x-6 w-48">
+              <span
+                class="text-white font-bold text-lg {% if loop.index0 == 0 %}text-yellow-300{% endif %}"
+              >
+                {{ day.day }}
+              </span>
+              <span class="text-white/60 text-sm">{{ day.date }}</span>
+              {% if loop.index0 == 0 %}
+              <span
+                class="text-white/80 text-xs bg-white/20 px-3 py-1 rounded-full"
+              >
+                Today
+              </span>
+              {% endif %}
+            </div>
+
+            <div class="flex items-center space-x-4 flex-1 justify-center">
+              <img
+                src="http://openweathermap.org/img/wn/{{ day.icon }}@2x.png"
+                alt="Weather icon"
+                class="w-12 h-12 weather-icon"
+              />
+              <span class="text-white/70 text-lg"
+                >{{ day.description|capitalize }}</span
+              >
+              <div
+                class="flex items-center space-x-2 bg-white/20 rounded-full px-3 py-1"
+              >
+                <i class="fas fa-umbrella text-blue-400 text-sm"></i>
+                <span class="text-white/80 text-sm"
+                  >{{ day.precipitation }}%</span
+                >
+              </div>
+            </div>
+
+            <div class="flex items-center space-x-6 w-40 justify-end">
+              <span class="text-white/70 text-lg"
+                >{{ day.low|round|int }}°</span
+              >
+              <div class="w-20 bg-white/30 rounded-full h-2.5">
+                <div
+                  class="bg-gradient-to-r from-blue-400 to-yellow-400 h-2.5 rounded-full temp-bar"
+                  style="width: {{ ((day.high - day.low) / 40 * 100) | round(2) }}%;"
+                ></div>
+              </div>
+              <span class="text-white font-bold text-xl"
+                >{{ day.high|round|int }}°</span
+              >
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
     </div>
 
     {% else %}
     <!-- Default/Error State -->
-    <div class="text-center text-white py-12">
-      <i class="fas fa-cloud-sun text-6xl mb-4 opacity-50"></i>
-      <h2 class="text-2xl font-semibold mb-2">Weather App</h2>
-      <p class="text-white/70">Enter a city name to get weather information</p>
-      <button
-        id="useLocationBtn"
-        class="mt-4 bg-white/20 backdrop-blur-lg border border-white/30 rounded-full px-6 py-2 text-white hover:bg-white/30 transition-colors"
+    <div class="text-center text-white py-20">
+      <div
+        class="bg-white/20 backdrop-blur-lg rounded-3xl p-12 border border-white/30 shadow-2xl max-w-2xl mx-auto"
       >
-        <i class="fas fa-location-arrow mr-2"></i>Use My Location
-      </button>
+        <i class="fas fa-cloud-sun text-8xl mb-6 opacity-50"></i>
+        <h2 class="text-4xl font-bold mb-4">Polar Weather</h2>
+        <p class="text-white/70 text-xl mb-8">
+          Enter a city name or use your location to get weather information
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <button
+            id="useLocationBtn"
+            class="bg-white/20 backdrop-blur-lg border border-white/30 rounded-full px-8 py-4 text-white hover:bg-white/30 transition-all duration-300 text-lg font-semibold shadow-lg transform hover:scale-105"
+          >
+            <i class="fas fa-location-arrow mr-3"></i>Use My Location
+          </button>
+          <a
+            href="/?city=London"
+            class="bg-white/20 backdrop-blur-lg border border-white/30 rounded-full px-8 py-4 text-white hover:bg-white/30 transition-all duration-300 text-lg font-semibold shadow-lg transform hover:scale-105 text-center"
+          >
+            <i class="fas fa-globe mr-3"></i>Try London
+          </a>
+        </div>
+      </div>
     </div>
     {% endif %}
   </div>
@@ -328,14 +466,25 @@
     .addEventListener("submit", function (e) {
       e.preventDefault();
       const city = this.querySelector('input[name="city"]').value;
-      window.location.href = `/?city=${encodeURIComponent(city)}`;
+      if (city.trim()) {
+        window.location.href = `/?city=${encodeURIComponent(city.trim())}`;
+      }
     });
 
   // Favorite functionality
   const favoriteBtn = document.getElementById('favoriteBtn');
   if (favoriteBtn) {
+    // Check if current city is already favorited
+    const currentCity = "{{ weather.current.city }}";
+    const favoriteCities = {{ favorite_cities | tojson | safe }};
+
+    if (favoriteCities.includes(currentCity)) {
+      favoriteBtn.classList.add('favorited', 'bg-yellow-500/30');
+      favoriteBtn.innerHTML = '<i class="fas fa-star mr-2"></i>Remove from Favorites';
+    }
+
     favoriteBtn.addEventListener('click', async function() {
-      const city = document.querySelector('input[name="city"]').value;
+      const city = currentCity;
       const isFavorite = this.classList.contains('favorited');
 
       try {
@@ -352,19 +501,21 @@
 
         if (response.ok) {
           if (isFavorite) {
-            this.classList.remove('favorited');
-            this.innerHTML = '<i class="far fa-star mr-2"></i>Add to Favorites';
-            this.classList.remove('bg-yellow-500/30');
+            this.classList.remove('favorited', 'bg-yellow-500/30');
             this.classList.add('bg-white/20');
+            this.innerHTML = '<i class="far fa-star mr-2"></i>Add to Favorites';
           } else {
-            this.classList.add('favorited');
-            this.innerHTML = '<i class="fas fa-star mr-2"></i>Remove from Favorites';
+            this.classList.add('favorited', 'bg-yellow-500/30');
             this.classList.remove('bg-white/20');
-            this.classList.add('bg-yellow-500/30');
+            this.innerHTML = '<i class="fas fa-star mr-2"></i>Remove from Favorites';
           }
+
+          // Show notification
+          showNotification(isFavorite ? 'Removed from favorites' : 'Added to favorites');
         }
       } catch (error) {
         console.error('Error toggling favorite:', error);
+        showNotification('Error updating favorites', true);
       }
     });
   }
@@ -377,6 +528,7 @@
     if (button) {
       button.addEventListener('click', function() {
         if (navigator.geolocation) {
+          const originalHTML = button.innerHTML;
           button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Locating...';
           button.disabled = true;
 
@@ -386,15 +538,15 @@
                 const response = await fetch(`/api/geolocation?lat=${position.coords.latitude}&lon=${position.coords.longitude}`);
                 const data = await response.json();
 
-                if (data.city) {
-                  window.location.href = `/?city=${encodeURIComponent(data.city)}`;
+                if (data.city && data.city !== 'Unknown Location') {
+                  window.location.href = `/?lat=${position.coords.latitude}&lon=${position.coords.longitude}&city=${encodeURIComponent(data.city)}`;
                 } else {
-                  alert('Could not determine city from your location.');
-                  resetGeoButton(button);
+                  showNotification('Could not determine city from your location.', true);
+                  resetGeoButton(button, originalHTML);
                 }
               } catch (error) {
-                alert('Error getting location data.');
-                resetGeoButton(button);
+                showNotification('Error getting location data.', true);
+                resetGeoButton(button, originalHTML);
               }
             },
             function(error) {
@@ -410,145 +562,138 @@
                   errorMessage = 'Location request timed out.';
                   break;
               }
-              alert(errorMessage);
-              resetGeoButton(button);
+              showNotification(errorMessage, true);
+              resetGeoButton(button, originalHTML);
             },
-            { timeout: 10000 }
+            {
+              timeout: 15000,
+              enableHighAccuracy: true
+            }
           );
         } else {
-          alert('Geolocation is not supported by your browser.');
+          showNotification('Geolocation is not supported by your browser.', true);
         }
       });
     }
   }
 
-  function resetGeoButton(button) {
-    if (button.id === 'geoLocationBtn') {
-      button.innerHTML = '<i class="fas fa-location-arrow"></i>';
-    } else {
-      button.innerHTML = '<i class="fas fa-location-arrow mr-2"></i>Use My Location';
-    }
-    button.disabled = false;
+  function resetGeoButton(button, originalHTML) {
+    setTimeout(() => {
+      button.innerHTML = originalHTML;
+      button.disabled = false;
+    }, 2000);
   }
 
   setupGeolocation(geoLocationBtn);
   setupGeolocation(useLocationBtn);
 
+  // Notification function
+  function showNotification(message, isError = false) {
+    const notification = document.createElement('div');
+    notification.className = `fixed top-4 right-4 z-50 px-6 py-4 rounded-2xl shadow-2xl backdrop-blur-lg border transform transition-all duration-300 ${
+      isError
+        ? 'bg-red-500/80 border-red-300/50 text-white'
+        : 'bg-green-500/80 border-green-300/50 text-white'
+    }`;
+    notification.innerHTML = `
+      <div class="flex items-center space-x-3">
+        <i class="fas ${isError ? 'fa-exclamation-triangle' : 'fa-check-circle'}"></i>
+        <span class="font-semibold">${message}</span>
+      </div>
+    `;
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+      notification.style.transform = 'translateX(100%)';
+      setTimeout(() => {
+        if (notification.parentNode) {
+          notification.parentNode.removeChild(notification);
+        }
+      }, 300);
+    }, 3000);
+  }
+
   // Temperature Chart
   {% if weather %}
-    const temperatureChart = document.getElementById('temperatureChart');
-    if (temperatureChart) {
-      const hourlyData = {{ weather.hourly | tojson | safe }};
-      console.log(hourlyData);
+  const ctx = document.getElementById('temperatureChart').getContext('2d');
+  const hourlyData = {{ weather.hourly | tojson | safe }};
 
-
-    new Chart(temperatureChart, {
-      type: 'line',
-      data: {
-        labels: hourlyData.map(h => h.time),
-        datasets: [{
-          label: 'Temperature °C',
-          data: hourlyData.map(h => h.temp),
-          borderColor: 'rgb(255, 255, 255)',
-          backgroundColor: 'rgba(255, 255, 255, 0.1)',
-          borderWidth: 2,
-          fill: true,
-          tension: 0.4,
-          pointBackgroundColor: 'rgb(255, 255, 255)',
-          pointBorderColor: 'rgba(255, 255, 255, 0.8)',
-          pointRadius: 3,
-          pointHoverRadius: 5
-        }]
+  const temperatureChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: hourlyData.slice(0, 12).map(h => h.time),
+      datasets: [{
+        label: 'Temperature (°C)',
+        data: hourlyData.slice(0, 12).map(h => h.temp),
+        borderColor: 'rgba(255, 255, 255, 0.8)',
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+        borderWidth: 3,
+        fill: true,
+        tension: 0.4,
+        pointBackgroundColor: 'rgba(255, 255, 255, 0.9)',
+        pointBorderColor: 'rgba(255, 255, 255, 1)',
+        pointBorderWidth: 2,
+        pointRadius: 4,
+        pointHoverRadius: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          labels: {
+            color: 'white',
+            font: {
+              size: 14
+            }
+          }
+        }
       },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false
+      scales: {
+        x: {
+          grid: {
+            color: 'rgba(255, 255, 255, 0.1)'
           },
-          tooltip: {
-            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-            titleColor: 'white',
-            bodyColor: 'white',
-            borderColor: 'rgba(255, 255, 255, 0.2)',
-            borderWidth: 1
+          ticks: {
+            color: 'rgba(255, 255, 255, 0.8)',
+            font: {
+              size: 12
+            }
           }
         },
-        scales: {
-          y: {
-            grid: {
-              color: 'rgba(255, 255, 255, 0.1)'
-            },
-            ticks: {
-              color: 'white',
-              callback: function(value) {
-                return value + '°';
-              }
-            }
+        y: {
+          grid: {
+            color: 'rgba(255, 255, 255, 0.1)'
           },
-          x: {
-            grid: {
-              display: false
+          ticks: {
+            color: 'rgba(255, 255, 255, 0.8)',
+            font: {
+              size: 12
             },
-            ticks: {
-              color: 'white'
+            callback: function(value) {
+              return value + '°';
             }
           }
         }
       }
-    });
-  }
+    }
+  });
   {% endif %}
 
-  // Add smooth animations to elements
+  // Add animations
   document.addEventListener('DOMContentLoaded', function() {
-    const animatedElements = document.querySelectorAll('.bg-white\\/20');
-    animatedElements.forEach((element, index) => {
-      element.style.animationDelay = `${index * 0.1}s`;
-      element.classList.add('animate-fade-in');
+    const elements = document.querySelectorAll('.current-weather, [class*="hover:scale"]');
+    elements.forEach((el, index) => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+
+      setTimeout(() => {
+        el.style.transition = 'all 0.6s ease-out';
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+      }, index * 100);
     });
   });
 </script>
-
-<style>
-  .chart-container {
-    height: 200px;
-    position: relative;
-  }
-
-  .animate-fade-in {
-    animation: fadeIn 0.6s ease-out forwards;
-    opacity: 0;
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .hourly-forecast::-webkit-scrollbar {
-    height: 4px;
-  }
-
-  .hourly-forecast::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 2px;
-  }
-
-  .hourly-forecast::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 2px;
-  }
-
-  .temp-bar {
-    transition: width 1s ease-in-out;
-  }
-</style>
 {% endblock %}

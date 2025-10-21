@@ -1,51 +1,124 @@
 {% extends "base.html" %} {% block content %}
-<div class="min-h-screen bg-gradient-to-br from-blue-400 to-purple-500 py-8">
-  <div class="max-w-4xl mx-auto px-4">
-    <div class="flex items-center justify-between mb-8">
-      <h1 class="text-white text-3xl font-bold">Favorite Cities</h1>
-      <a href="/" class="text-white hover:text-white/80">
-        <i class="fas fa-arrow-left mr-2"></i>Back to Weather
-      </a>
+<div
+  class="min-h-screen bg-gradient-to-br from-blue-400 via-purple-500 to-indigo-600"
+>
+  <!-- Header -->
+  <div class="bg-white/20 backdrop-blur-lg border-b border-white/30 shadow-lg">
+    <div class="max-w-6xl mx-auto px-4 py-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <a href="/" class="text-white hover:text-white/80 transition-colors">
+            <i class="fas fa-arrow-left text-xl"></i>
+          </a>
+          <i class="fas fa-heart text-white text-2xl"></i>
+          <h1 class="text-white text-2xl font-bold">Favorite Cities</h1>
+        </div>
+        <a href="/" class="text-white hover:text-white/80 transition-colors">
+          <i class="fas fa-home text-2xl"></i>
+        </a>
+      </div>
     </div>
+  </div>
 
+  <!-- Favorites Content -->
+  <div class="max-w-6xl mx-auto px-4 py-8">
     {% if cities %}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {% for city in cities %}
       <div
-        class="bg-white/20 backdrop-blur-lg rounded-3xl p-6 border border-white/30 shadow-xl"
+        class="bg-white/20 backdrop-blur-lg rounded-3xl p-6 border border-white/30 shadow-2xl transform hover:scale-[1.02] transition-all duration-300"
       >
         <div class="flex justify-between items-start mb-4">
-          <h3 class="text-white text-xl font-semibold">{{ city.city }}</h3>
-          <a
-            href="/?city={{ city.city }}"
-            class="text-white/70 hover:text-white"
+          <h3 class="text-white text-xl font-bold">{{ city.city }}</h3>
+          <button
+            class="text-red-300 hover:text-red-200 transition-colors remove-favorite"
+            data-city="{{ city.city }}"
           >
-            <i class="fas fa-external-link-alt"></i>
-          </a>
+            <i class="fas fa-times text-lg"></i>
+          </button>
         </div>
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-white text-3xl font-light">
-              {{ city.current_temp|round|int }}°
-            </p>
-            <p class="text-white/70 capitalize">{{ city.description }}</p>
-          </div>
+        <div class="text-center">
           <img
             src="http://openweathermap.org/img/wn/{{ city.icon }}@2x.png"
             alt="Weather icon"
-            class="w-16 h-16"
+            class="w-20 h-20 mx-auto mb-3 weather-icon"
           />
+          <p class="text-white text-4xl font-light mb-2">
+            {{ city.current_temp|round|int }}°
+          </p>
+          <p class="text-white/70 text-lg capitalize mb-4">
+            {{ city.description }}
+          </p>
+          <a
+            href="/?city={{ city.city }}"
+            class="bg-white/20 backdrop-blur-lg border border-white/30 rounded-full px-6 py-3 text-white hover:bg-white/30 transition-all duration-300 inline-block"
+          >
+            View Details
+          </a>
         </div>
       </div>
       {% endfor %}
     </div>
     {% else %}
-    <div class="text-center text-white py-12">
-      <i class="far fa-star text-6xl mb-4 opacity-50"></i>
-      <h2 class="text-2xl font-semibold mb-2">No Favorite Cities</h2>
-      <p class="text-white/70">Add cities to your favorites for quick access</p>
+    <div class="text-center text-white py-20">
+      <div
+        class="bg-white/20 backdrop-blur-lg rounded-3xl p-12 border border-white/30 shadow-2xl max-w-2xl mx-auto"
+      >
+        <i class="fas fa-heart text-8xl mb-6 opacity-50"></i>
+        <h2 class="text-4xl font-bold mb-4">No Favorite Cities</h2>
+        <p class="text-white/70 text-xl mb-8">
+          Add cities to your favorites to see them here
+        </p>
+        <a
+          href="/"
+          class="bg-white/20 backdrop-blur-lg border border-white/30 rounded-full px-8 py-4 text-white hover:bg-white/30 transition-all duration-300 text-lg font-semibold shadow-lg transform hover:scale-105 inline-block"
+        >
+          <i class="fas fa-plus mr-3"></i>Add Favorites
+        </a>
+      </div>
     </div>
     {% endif %}
   </div>
 </div>
+
+<script>
+  // Remove favorite functionality
+  document.querySelectorAll(".remove-favorite").forEach((button) => {
+    button.addEventListener("click", async function () {
+      const city = this.getAttribute("data-city");
+      const card = this.closest(".bg-white\\/20");
+
+      try {
+        const response = await fetch("/favorite", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            city: city,
+            action: "remove",
+          }),
+        });
+
+        if (response.ok) {
+          // Add fade out animation
+          card.style.transform = "scale(0.8)";
+          card.style.opacity = "0";
+
+          setTimeout(() => {
+            card.remove();
+
+            // If no cards left, reload page to show empty state
+            if (!document.querySelector(".remove-favorite")) {
+              location.reload();
+            }
+          }, 300);
+        }
+      } catch (error) {
+        console.error("Error removing favorite:", error);
+        alert("Error removing favorite city");
+      }
+    });
+  });
+</script>
 {% endblock %}
